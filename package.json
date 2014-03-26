@@ -1,0 +1,22 @@
+{
+  "name": "xml-padding",
+  "version": "0.4.1",
+  "devDependencies": {
+    "xml-encryption": "*"
+  },
+  "main": "./lib",
+  "repository": "https://github.com/yutongp/node-xml-padding",
+  "keywords": [
+    "xml",
+    "encryption",
+    "xmlenc"
+  ],
+  "author": "Yutong Pei",
+  "dependencies": {
+    "xml-encryption": "*",
+    "xmldom": "*"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
