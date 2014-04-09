@@ -11,7 +11,6 @@ var port = config.oracle.port;
 var verify = config.oracle.verification_path;
 var encrypt = config.oracle.encryption_path;
 var host = config.oracle.host;
-var a = 0;
 
 var encrypt_options = {
   rsa_pub: config.oracle.rsa_pub
@@ -21,6 +20,46 @@ var encrypt_options = {
   , keyEncryptionAlgorighm: config.oracle.keyEncryptionAlgorighm
   , autopadding: false
 };
+
+
+
+function isInvalidXML(xml, testFunc) {
+  var err = false;
+
+  function isInvalidXMLNode(node) {
+    var invalid = false;
+    if (node.childNodes) {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        if (node.childNodes[i].data) {
+          if (testFunc(new Buffer(node.childNodes[i].data, 'binary'))) {
+            invalid = true;
+          }
+        }
+        if (isInvalidXMLNode (node.childNodes[i])) {
+          invalid = true;
+        }
+      }
+    }
+    return invalid;
+  }
+
+  var doc = new xmldom.DOMParser({
+    errorHandler:function(key,msg){
+      console.log("xxx3xxx", key, msg);
+      err = true;
+    }
+  }).parseFromString(xml, 'text/xml');
+  if (err) {
+    return true;
+  }
+  var root = doc.documentElement;
+  if (root) {
+    return isInvalidXMLNode(root);
+  } else {
+    return isInvalidXMLNode(doc);
+  }
+}
+
 
 function includeTypeAChar(buf) {
   var isTypeAChar = function(c) {
@@ -45,16 +84,6 @@ function includeTypeAChar(buf) {
   }
   return false;
 }
-
-//var hi = new Buffer(1);
-//hi[0] = 0x26;
-//console.log("hi: ", hi.toString('ascii'));
-//var doc = new xmldom.DOMParser({
-  //errorHandler:function(key,msg){
-    //console.log("xxx3xxx", key, msg);
-    //valid = false;
-  //}
-//}).parseFromString(hi.toString('ascii'), 'text/xml');
 
 http.createServer(function(req, res) {
 
@@ -89,13 +118,19 @@ http.createServer(function(req, res) {
             var padding = rawDecrytped[rawDecrytped.length - 1];
             console.log("======", rawDecrytped.toString('hex'), padding);
             if (padding <= 0x10 && padding >= 0x01) {
-              if (includeTypeAChar(rawDecrytped.slice(0, rawDecrytped.length - padding))) {
-                valid = false;
+              //if (includeTypeAChar(rawDecrytped.slice(0, rawDecrytped.length - padding))) {
+                //valid = false;
+              //}
+              var source = rawDecrytped.toString('binary', 0, rawDecrytped.length - padding);
+              if (source != "") {
+                if (isInvalidXML(source, includeTypeAChar)) {
+                  valid = false;
+                }
               }
 
               //console.log('HHHHHH', rawDecrytped.slice(0, rawDecrytped.length - padding));
 
-              //var source = rawDecrytped.toString('ascii', 0, rawDecrytped.length - padding);
+              //var source = rawDecrytped.toString('binary', 0, rawDecrytped.length - padding);
               //if (source != "") {
                 //var doc = new xmldom.DOMParser({
                   //errorHandler:function(key,msg){
@@ -106,10 +141,6 @@ http.createServer(function(req, res) {
               //}
             } else {
               valid = false;
-            }
-            if (valid) {
-              a++;
-              //console.log('AASDASD', a);
             }
             verifyACK(valid);
           });
