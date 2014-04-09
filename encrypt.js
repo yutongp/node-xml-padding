@@ -32,7 +32,6 @@ var req = http.request(options, function(res) {
     });
 
     res.on('end', function() {
-      console.log("dasdasd")
       fs.writeFile(__dirname + '/test/test'+num+'-encrypted.xml', fullBody, function(err) {
         if(err) {
           console.log(err);

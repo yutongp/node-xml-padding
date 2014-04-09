@@ -2,7 +2,8 @@
   "name": "xml-padding",
   "version": "0.4.1",
   "devDependencies": {
-    "xml-encryption": "*"
+    "xml-encryption": "*",
+    "async": "*"
   },
   "main": "./lib",
   "repository": "https://github.com/yutongp/node-xml-padding",

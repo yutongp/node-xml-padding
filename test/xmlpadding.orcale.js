@@ -2,8 +2,6 @@ var assert = require('assert')
     , fs = require('fs')
     , xmlenc = require("xml-encryption")
     , http = require('http')
-    , crypto = require('crypto')
-    , xmldom = require('xmldom')
     , config = require('../config/config')
 
 
@@ -53,7 +51,7 @@ var verifyPost = function (xmlInput, resMeg, cb) {
     req.end();
 }
 
-describe('encrypt', function() {
+describe('test on orcale', function() {
   it('should encrypt plaintext xml', function (done) {
 
     var xmlInput = '/test1-plaintext.xml';
