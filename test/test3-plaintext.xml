@@ -2,5 +2,6 @@
   <child>texxxxxt</child>
   <child>
     <schild>lol</schild>
+    <schild/>
   </child>
 </xml>

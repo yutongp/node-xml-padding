@@ -89,15 +89,19 @@ describe('test on orcale', function() {
 
   });
 
-  it('verify encrypted xml, return ok if xml is fine', function (done) {
+  it('verify encrypted text0 xml, return ok if xml is fine', function (done) {
+    verifyPost('/test0-encrypted.xml', 'Decrypt: OK\r\n', done);
+  });
+
+  it('verify encrypted text1 xml, return ok if xml is fine', function (done) {
     verifyPost('/test1-encrypted.xml', 'Decrypt: OK\r\n', done);
   });
 
-  it('verify encrypted xml, return error if xml has padding err', function (done) {
+  it('verify encrypted text1forge xml, return error if xml has padding err', function (done) {
     verifyPost('/test1-encrypted-forge1.xml', 'Decrypt: ERROR\r\n', done);
   });
 
-  it('verify encrypted xml, return error if xml has format err', function (done) {
+  it('verify encrypted text2 xml, return error if xml has format err', function (done) {
     verifyPost('/test2-encrypted.xml', 'Decrypt: ERROR\r\n', done);
   });
 
