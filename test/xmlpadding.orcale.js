@@ -1,6 +1,6 @@
 var assert = require('assert')
     , fs = require('fs')
-    , xmlenc = require("xml-encryption")
+    , xmlenc = require("../lib/xml-encryption")
     , http = require('http')
     , config = require('../config/config')
 

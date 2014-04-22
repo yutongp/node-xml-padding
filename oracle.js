@@ -1,10 +1,10 @@
 var http = require("http")
     , url = require("url")
     , path = require("path")
-    , xmlenc = require("xml-encryption")
+    , xmlenc = require("./lib/xml-encryption")
     , fs = require('fs')
     , querystring = require("querystring")
-    , xmldom = require('xmldom')
+    , xmldom = require('./lib/xmldom')
     , config = require('./config/config')
 
 var port = config.oracle.port;
@@ -88,7 +88,6 @@ function includeTypeAChar(buf) {
 http.createServer(function(req, res) {
 
   if (req.method === "POST") {
-    //console.log("[200] " + req.method + " to " + req.url);
     var fullBody = '';
 
     req.on('data', function(chunk) {
@@ -113,32 +112,16 @@ http.createServer(function(req, res) {
               res.end();
             }
             var valid = true;
-            //console.log("xxx1xxx", err, decrypted);
             var rawDecrytped = new Buffer(decrypted, 'binary');
             var padding = rawDecrytped[rawDecrytped.length - 1];
             console.log("======", rawDecrytped.toString('hex'), padding);
             if (padding <= 0x10 && padding >= 0x01) {
-              //if (includeTypeAChar(rawDecrytped.slice(0, rawDecrytped.length - padding))) {
-                //valid = false;
-              //}
               var source = rawDecrytped.toString('binary', 0, rawDecrytped.length - padding);
               if (source != "") {
                 if (isInvalidXML(source, includeTypeAChar)) {
                   valid = false;
                 }
               }
-
-              //console.log('HHHHHH', rawDecrytped.slice(0, rawDecrytped.length - padding));
-
-              //var source = rawDecrytped.toString('binary', 0, rawDecrytped.length - padding);
-              //if (source != "") {
-                //var doc = new xmldom.DOMParser({
-                  //errorHandler:function(key,msg){
-                    //console.log("xxx3xxx", key, msg);
-                    //valid = false;
-                  //}
-                //}).parseFromString(source, 'text/xml');
-              //}
             } else {
               valid = false;
             }
