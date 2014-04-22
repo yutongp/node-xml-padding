@@ -1,7 +1,7 @@
 var assert = require('assert')
     , fs = require('fs')
-    , http = require('http')
-    , xmlattack = require("../lib/xmlpadatck")
+    , xmlattack = require("./../lib/xmlpadatck")
+    , oracle = require("./../config/config.js").oracle;
 
 
 
@@ -9,7 +9,7 @@ var assert = require('assert')
 describe('test on xml padding attack', function() {
   var xmlPaddingAttackVerifier = function (xmlEncryptedFile, xmlPlainFile, testFunc, cb) {
     var xmlPlain = fs.readFileSync(__dirname + xmlPlainFile);
-    xmlattack.recoverEncryted2PlainXML(__dirname + xmlEncryptedFile, function(err, result){
+    xmlattack.recoverEncryted2PlainXML(__dirname + xmlEncryptedFile, oracle, function(err, result){
         testFunc(err, result, xmlPlain.toString());
         cb();
     });
